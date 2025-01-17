@@ -52,3 +52,12 @@
 Motes:
 
 * If you run into docker problems, check `Docker Desktop: Settings > Resources > WSL Integration > Turn off/on Ubuntu-24.04`
+
+## `hello-go` - a simple app
+
+```bash
+cd hello-go
+
+go run main.go
+go test ./...
+```

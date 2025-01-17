@@ -28,6 +28,8 @@ if ! command -v go &> /dev/null; then
     source ~/.bashrc
 fi
 
+go install github.com/go-delve/delve/cmd/dlv@latest
+
 echo ""
 echo "┌────────────────────────┐"
 echo "│ Checking for CLI tools │"
