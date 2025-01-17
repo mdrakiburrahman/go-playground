@@ -98,3 +98,7 @@ go build -o client main.go; ./client
 ```
 
 ![Run Hello OTEL Core](./.imgs/run-otelcol-core-demo.png)
+
+Debug the Client:
+
+![Debug the Client app](./.imgs/debug-otelcol-core-demo-client.png)
