@@ -1,5 +1,9 @@
 # Go playground
 
+## Style Guide
+
+* [Uber's Style Guide](https://github.com/uber-go/guide/blob/master/style.md)
+
 ## Dev env setup
 
 1. Get a fresh new WSL machine up:
@@ -68,7 +72,7 @@ The debugger settings should also work (first time debug takes a few seconds to 
 
 ## OpenTelemetry
 
-### Client/Server demo to Collector
+### Client/Server demo to Core Collector
 
 Spin up the OTEL Collector (Core) binary in one terminal:
 
@@ -102,3 +106,20 @@ go build -o client main.go; ./client
 Debug the Client, Collector and Server together:
 
 ![Debug all three](./.imgs/debug-otelcol-core-all.png)
+
+### Building a Custom Collector
+
+Install `ocb` CLI:
+
+```
+curl --proto '=https' --tlsv1.2 -fL -o ocb \
+https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/cmd%2Fbuilder%2Fv0.117.0/ocb_0.117.0_linux_amd64
+chmod +x ocb
+./ocb help
+```
+
+Build the collector:
+
+```
+./ocb --config custom-collector-builder-config.yaml
+```

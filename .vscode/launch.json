@@ -14,7 +14,15 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceRoot}/opentelemetry-collector/cmd/otelcorecol",
-            "args": ["--config", "/home/boor/go-playground/opentelemetry-collector/examples/local/otel-config.yaml"]
+            "args": ["--config", "${workspaceRoot}/opentelemetry-collector/examples/local/otel-config.yaml"]
+        },
+        {
+            "name": "Launch OTEL Custom Collector",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/opentelemetry-collector-raki",
+            "args": ["--config", "${workspaceRoot}/custom-collector-runtime-config.yaml"]
         },
         {
             "name": "Launch Demo Client Application",

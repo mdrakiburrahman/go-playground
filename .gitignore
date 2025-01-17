@@ -27,3 +27,5 @@ go.work.sum
 # Open Telemetry forks
 opentelemetry-collector/*
 opentelemetry-collector-contrib/*
+ocb
+otelcol-raki
