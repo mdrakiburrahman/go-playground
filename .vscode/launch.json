@@ -9,11 +9,26 @@
             "program": "${workspaceRoot}/hello-go"
         },
         {
+            "name": "Launch OTEL Core Collector",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/opentelemetry-collector/cmd/otelcorecol",
+            "args": ["--config", "/home/boor/go-playground/opentelemetry-collector/examples/local/otel-config.yaml"]
+        },
+        {
             "name": "Launch Demo Client Application",
             "type": "go",
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceRoot}/opentelemetry-collector-contrib/examples/demo/client"
+        },
+        {
+            "name": "Launch Demo Server Application",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/opentelemetry-collector-contrib/examples/demo/server"
         }
     ]
 }

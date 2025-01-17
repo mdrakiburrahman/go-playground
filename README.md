@@ -99,6 +99,6 @@ go build -o client main.go; ./client
 
 ![Run Hello OTEL Core](./.imgs/run-otelcol-core-demo.png)
 
-Debug the Client:
+Debug the Client, Collector and Server together:
 
-![Debug the Client app](./.imgs/debug-otelcol-core-demo-client.png)
+![Debug all three](./.imgs/debug-otelcol-core-all.png)
