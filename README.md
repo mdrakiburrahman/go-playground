@@ -62,11 +62,15 @@ go run main.go
 go test ./...
 ```
 
+The debugger settings should also work (first time debug takes a few seconds to boot):
+
+![Debug Hello Go](./.imgs/debug-hello-go.png)
+
 ## OpenTelemetry
 
 ### Client/Server demo to Collector
 
-Spin up the OTEL Collector (Server) in one terminal:
+Spin up the OTEL Collector (Core) binary in one terminal:
 
 ```bash
 cd ${GIT_ROOT}
@@ -86,9 +90,11 @@ cd opentelemetry-collector-contrib/examples/demo/server
 go build -o server main.go; ./server
 ```
 
-And finally, the clien that sends requests
+And finally, the HTTP Client that sends requests
 ```bash
 cd ${GIT_ROOT}
 cd opentelemetry-collector-contrib/examples/demo/client
 go build -o client main.go; ./client
 ```
+
+![Run Hello OTEL Core](./.imgs/run-otelcol-core-demo.png)
