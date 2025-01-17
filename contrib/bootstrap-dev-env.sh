@@ -11,6 +11,20 @@ set -e
 set -m
 
 echo ""
+echo "┌───────────────────────────────────┐"
+echo "│ Checking for package dependencies │"
+echo "└───────────────────────────────────┘"
+echo ""
+
+PACKAGES=""
+if ! command -v make &> /dev/null; then PACKAGES="$PACKAGES make"; fi
+if [ ! -z "$PACKAGES" ]; then
+    echo "Packages $PACKAGES not found - installing..."
+    sudo apt-get update 2>&1 > /dev/null
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y $PACKAGES 2>&1 > /dev/null
+fi
+
+echo ""
 echo "┌────────────────────────────────────┐"
 echo "│ Checking for language dependencies │"
 echo "└────────────────────────────────────┘"
@@ -28,7 +42,7 @@ if ! command -v go &> /dev/null; then
     source ~/.bashrc
 fi
 
-go install github.com/go-delve/delve/cmd/dlv@latest
+/usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
 
 echo ""
 echo "┌────────────────────────┐"
@@ -56,6 +70,7 @@ echo ""
 code --install-extension github.copilot
 code --install-extension eamodio.gitlens
 code --install-extension golang.go
+code --install-extension ms-vscode.makefile-tools
 
 echo ""
 echo "┌──────────┐"
@@ -64,5 +79,5 @@ echo "└──────────┘"
 echo ""
 
 echo "Docker: $(docker --version)"
-echo "Go: $(go version)"
+echo "Go: $(/usr/local/go/bin/go version)"
 echo "Azure CLI: $(az version)"

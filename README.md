@@ -61,3 +61,34 @@ cd hello-go
 go run main.go
 go test ./...
 ```
+
+## OpenTelemetry
+
+### Client/Server demo to Collector
+
+Spin up the OTEL Collector (Server) in one terminal:
+
+```bash
+cd ${GIT_ROOT}
+git clone https://github.com/open-telemetry/opentelemetry-collector.git
+cd opentelemetry-collector
+make install-tools
+make otelcorecol
+./bin/otelcorecol_* --config ./examples/local/otel-config.yaml
+```
+
+Spin up an HTTP Server that sends OTEL metrics to our Collector above:
+
+```bash
+cd ${GIT_ROOT}
+git clone https://github.com/open-telemetry/opentelemetry-collector-contrib.git
+cd opentelemetry-collector-contrib/examples/demo/server
+go build -o server main.go; ./server
+```
+
+And finally, the clien that sends requests
+```bash
+cd ${GIT_ROOT}
+cd opentelemetry-collector-contrib/examples/demo/client
+go build -o client main.go; ./client
+```
