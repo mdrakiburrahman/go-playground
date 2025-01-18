@@ -143,3 +143,7 @@ Generate traces:
 go install github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen@latest
 telemetrygen traces --otlp-insecure --traces 1
 ```
+
+View in Jaeger UI at `http://localhost:16686/`:
+
+![Jaeger UI](./.imgs/jaeger-trace.png)
