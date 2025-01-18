@@ -123,3 +123,23 @@ Build the collector:
 ```
 ./ocb --config custom-collector-builder-config.yaml
 ```
+
+### Building a Receiver
+
+Spin up Jaeger UI:
+
+```bash
+docker run -d --name jaeger \
+  -e COLLECTOR_OTLP_ENABLED=true \
+  -p 16686:16686 \
+  -p 14317:4317 \
+  -p 14318:4318 \
+  jaegertracing/all-in-one:1.41
+```
+
+Generate traces:
+
+```
+go install github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen@latest
+telemetrygen traces --otlp-insecure --traces 1
+```

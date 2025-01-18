@@ -37,12 +37,14 @@ if ! command -v go &> /dev/null; then
     wget -o- "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" -P $GO_DOWNLOAD_DIR
     sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf $GO_DOWNLOAD_DIR/go${GO_VERSION}.linux-amd64.tar.gz
 
-    LINES="export PATH=\$PATH:/usr/local/go/bin"
+    USER_HOME=$(eval echo ~$USER)
+    LINES="export PATH=\$PATH:/usr/local/go/bin:$USER_HOME/go/bin"
     echo -e "$LINES" >> ~/.bashrc
     source ~/.bashrc
 fi
 
 /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
+/usr/local/go/bin/go install github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen@latest
 
 echo ""
 echo "┌────────────────────────┐"

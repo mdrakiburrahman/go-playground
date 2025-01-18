@@ -22,13 +22,17 @@ processors:
 exporters:
   debug:
     verbosity: detailed
+  otlp/jaeger:
+    endpoint: localhost:14317
+    tls:
+      insecure: true
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [debug]
+      exporters: [debug, otlp/jaeger]
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, batch]
