@@ -31,7 +31,7 @@ func (tailtracerRcvr *tailtracerReceiver) Start(ctx context.Context, host compon
 			select {
 			case <-ticker.C:
 				tailtracerRcvr.logger.Info("I should start processing traces now!")
-				tailtracerRcvr.nextConsumer.ConsumeTraces(ctx, generateTraces(tailtracerRcvr.config.NumberOfTraces))
+				tailtracerRcvr.nextConsumer.ConsumeTraces(ctx, generateTraces(tailtracerRcvr.config.NumberOfTraces, tailtracerRcvr.config.SecretAttributeName, tailtracerRcvr.config.SecretAttributeLength))
 			case <-ctx.Done():
 				return
 			}

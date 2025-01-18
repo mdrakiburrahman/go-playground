@@ -10,6 +10,8 @@ receivers:
       http:
         endpoint: localhost:4318
   tailtracer:
+    secret_attribute_name: secret.attr
+    secret_attribute_length: 5
     interval: 5s
     number_of_traces: 1
 
@@ -21,6 +23,10 @@ processors:
     # 25% of limit up to 2G
     spike_limit_mib: 512
     check_interval: 5s
+
+connectors:
+  exampleconnector:
+    attribute_name: secret.attr
 
 exporters:
   debug:
@@ -35,9 +41,9 @@ service:
     traces:
       receivers: [otlp, tailtracer]
       processors: [memory_limiter, batch]
-      exporters: [debug, otlp/jaeger]
+      exporters: [debug, otlp/jaeger, exampleconnector]
     metrics:
-      receivers: [otlp]
+      receivers: [otlp, exampleconnector]
       processors: [memory_limiter, batch]
       exporters: [debug]
     logs:

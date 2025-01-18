@@ -17,6 +17,7 @@ import (
 	memorylimiterprocessor "go.opentelemetry.io/collector/processor/memorylimiterprocessor"
 	otlpreceiver "go.opentelemetry.io/collector/receiver/otlpreceiver"
 	tailtracer "github.com/open-telemetry/opentelemetry-tutorials/trace-receiver/tailtracer"
+	exampleconnector "github.com/open-telemetry/opentelemetry-tutorials/exampleconnector"
 )
 
 func components() (otelcol.Factories, error) {
@@ -65,6 +66,7 @@ func components() (otelcol.Factories, error) {
 	factories.ProcessorModules[memorylimiterprocessor.NewFactory().Type()] = "go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.117.0"
 
 	factories.Connectors, err = connector.MakeFactoryMap(
+		exampleconnector.NewFactory(),
 	)
 	if err != nil {
 		return otelcol.Factories{}, err

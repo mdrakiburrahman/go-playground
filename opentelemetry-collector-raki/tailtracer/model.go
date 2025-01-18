@@ -91,7 +91,16 @@ func getRandomNumber(min int, max int) int {
 	return i
 }
 
-func generateTraces(numberOfTraces int) ptrace.Traces {
+func getRandomString(n int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
+func generateTraces(numberOfTraces int, secretAttributeName string, secretAttributeLength int) ptrace.Traces {
 	traces := ptrace.NewTraces()
 
 	for i := 0; i <= numberOfTraces; i++ {
@@ -110,7 +119,7 @@ func generateTraces(numberOfTraces int) ptrace.Traces {
 
 		backendInstScope := appendAtmSystemInstrScopeSpans(&resourceSpan)
 
-		appendTraceSpans(&newBackendSystem, &backendInstScope, &atmInstScope)
+		appendTraceSpans(&newBackendSystem, &backendInstScope, &atmInstScope, &secretAttributeName, &secretAttributeLength)
 	}
 
 	return traces
@@ -181,7 +190,7 @@ func NewSpanID() pcommon.SpanID {
 	return spanID
 }
 
-func appendTraceSpans(backend *BackendSystem, backendScopeSpans *ptrace.ScopeSpans, atmScopeSpans *ptrace.ScopeSpans) {
+func appendTraceSpans(backend *BackendSystem, backendScopeSpans *ptrace.ScopeSpans, atmScopeSpans *ptrace.ScopeSpans, secretAttribute *string, secretAttributeLength *int) {
 	traceId := NewTraceID()
 
 	var atmOperationName string
@@ -208,6 +217,7 @@ func appendTraceSpans(backend *BackendSystem, backendScopeSpans *ptrace.ScopeSpa
 	atmSpan.Status().SetCode(ptrace.StatusCodeOk)
 	atmSpan.SetStartTimestamp(pcommon.NewTimestampFromTime(atmSpanStartTime))
 	atmSpan.SetEndTimestamp(pcommon.NewTimestampFromTime(atmSpanFinishTime))
+	atmSpan.Attributes().PutStr(*secretAttribute, getRandomString(*secretAttributeLength))
 
 	backendSpanId := NewSpanID()
 

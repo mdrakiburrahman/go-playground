@@ -156,6 +156,7 @@ cd ${GIT_ROOT}/opentelemetry-collector-raki
 go work init
 go work use otelcol-raki
 go work use tailtracer
+go work use exampleconnector
 ```
 
 Run the Collector with the receiver wired up, either use VSCOde debugging, or via `go`:

@@ -7,8 +7,10 @@ import (
 
 // Config represents the receiver config settings within the collector's config.yaml
 type Config struct {
-	Interval       string `mapstructure:"interval"`
-	NumberOfTraces int    `mapstructure:"number_of_traces"`
+	Interval              string `mapstructure:"interval"`
+	NumberOfTraces        int    `mapstructure:"number_of_traces"`
+	SecretAttributeName   string `mapstructure:"secret_attribute_name"`
+	SecretAttributeLength int    `mapstructure:"secret_attribute_length"`
 }
 
 // Validate checks if the receiver configuration is valid
