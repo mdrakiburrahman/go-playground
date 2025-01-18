@@ -4,14 +4,15 @@ dist:
   output_path: ./opentelemetry-collector-raki
 
 exporters:
-  - gomod:
-      go.opentelemetry.io/collector/exporter/debugexporter v0.117.0
-  - gomod:
-      go.opentelemetry.io/collector/exporter/otlpexporter v0.117.0
+  - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.117.0
+  - gomod: go.opentelemetry.io/collector/exporter/otlpexporter v0.117.0
+
+extensions:
+  - gomod: go.opentelemetry.io/collector/extension/zpagesextension v0.117.0
 
 processors:
-  - gomod:
-      go.opentelemetry.io/collector/processor/batchprocessor v0.117.0
+  - gomod: go.opentelemetry.io/collector/processor/batchprocessor v0.117.0
+  - gomod: go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.117.0
 
 receivers:
   - gomod:

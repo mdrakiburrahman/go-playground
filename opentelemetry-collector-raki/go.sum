@@ -197,6 +197,8 @@ go.opentelemetry.io/collector/featuregate v1.23.0 h1:N033ROo85qKrsK16QzR6RV+3UWO
 go.opentelemetry.io/collector/featuregate v1.23.0/go.mod h1:3GaXqflNDVwWndNGBJ1+XJFy3Fv/XrFgjMN60N3z7yg=
 go.opentelemetry.io/collector/internal/fanoutconsumer v0.117.0 h1:IfObXF9WEixWA9baPt0d4GOv8XGxmlsX7oAyD9Gdq/4=
 go.opentelemetry.io/collector/internal/fanoutconsumer v0.117.0/go.mod h1:n+hmwNk4CbOTmQyUo1K4CEnCGcrPd7RY3E6ljrQ2GYo=
+go.opentelemetry.io/collector/internal/memorylimiter v0.117.0 h1:D1VzSopWxegkaOyqprh9/DOsfb+Nb2oFp/4xP5UI6F8=
+go.opentelemetry.io/collector/internal/memorylimiter v0.117.0/go.mod h1:cva7zIC6wfciMRk4z7zCIWpfiUoA7Hx3ZR1Op4BPP+0=
 go.opentelemetry.io/collector/internal/sharedcomponent v0.117.0 h1:mk+qZO2HpNny3FuYeb4mjL4mbrEfkJN5untocHA8AqM=
 go.opentelemetry.io/collector/internal/sharedcomponent v0.117.0/go.mod h1:Hlzn5+54tgYchP3OJz/YMnrbMNHX8PggDpZFlDTB2kQ=
 go.opentelemetry.io/collector/otelcol v0.117.0 h1:BWmXS+Qh8ypu95w5PKz4NEcyRfX9TzoXQaqD6antji8=
@@ -215,6 +217,8 @@ go.opentelemetry.io/collector/processor v0.117.0 h1:K4WdaNC5ROIoLRGgyHmXxtw7xVpA
 go.opentelemetry.io/collector/processor v0.117.0/go.mod h1:4ewsyJD4n8GjFN+mFbxgr7uXLZYNcJEnH3wl47aDV7s=
 go.opentelemetry.io/collector/processor/batchprocessor v0.117.0 h1:8ZhMNrrGswaL423Gy7+B4H8qAxuUvaCnc3vdjcJJuGs=
 go.opentelemetry.io/collector/processor/batchprocessor v0.117.0/go.mod h1:ghiVjd377WltMOybbzcwtg1XqFFS33FzLmWbXbTJ0Ss=
+go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.117.0 h1:WQFkiU2X04b8+wFSI8MTIt8m1ZRrQj0vROkgOLOu7VE=
+go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.117.0/go.mod h1:yrZs8KUYMEnJetlAvKNa2QI9Fw10alkpurZrj/RtEes=
 go.opentelemetry.io/collector/processor/processortest v0.117.0 h1:c2zjsm3nQDkq9GErzhczN7psGI5Wk0eqXM5LGrX3wxg=
 go.opentelemetry.io/collector/processor/processortest v0.117.0/go.mod h1:nywNHogkxp++ab3QkXpWKlv41Gkm9cAYB4PHvyoHwjs=
 go.opentelemetry.io/collector/processor/xprocessor v0.117.0 h1:yGBjlY8HRb2AqYo1Q8pKJOLRbmZKrjeeTO4COiP45OU=

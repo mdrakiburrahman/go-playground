@@ -17,9 +17,11 @@ require (
 	go.opentelemetry.io/collector/exporter/debugexporter v0.117.0
 	go.opentelemetry.io/collector/exporter/otlpexporter v0.117.0
 	go.opentelemetry.io/collector/extension v0.117.0
+	go.opentelemetry.io/collector/extension/zpagesextension v0.117.0
 	go.opentelemetry.io/collector/otelcol v0.117.0
 	go.opentelemetry.io/collector/processor v0.117.0
 	go.opentelemetry.io/collector/processor/batchprocessor v0.117.0
+	go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.117.0
 	go.opentelemetry.io/collector/receiver v0.117.0
 	go.opentelemetry.io/collector/receiver/otlpreceiver v0.117.0
 	golang.org/x/sys v0.29.0
@@ -99,6 +101,7 @@ require (
 	go.opentelemetry.io/collector/extension/xextension v0.117.0 // indirect
 	go.opentelemetry.io/collector/featuregate v1.23.0 // indirect
 	go.opentelemetry.io/collector/internal/fanoutconsumer v0.117.0 // indirect
+	go.opentelemetry.io/collector/internal/memorylimiter v0.117.0 // indirect
 	go.opentelemetry.io/collector/internal/sharedcomponent v0.117.0 // indirect
 	go.opentelemetry.io/collector/pdata v1.23.0 // indirect
 	go.opentelemetry.io/collector/pdata/pprofile v0.117.0 // indirect
@@ -116,6 +119,7 @@ require (
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.56.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.56.0 // indirect
 	go.opentelemetry.io/contrib/propagators/b3 v1.31.0 // indirect
+	go.opentelemetry.io/contrib/zpages v0.56.0 // indirect
 	go.opentelemetry.io/otel v1.32.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.7.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.32.0 // indirect
