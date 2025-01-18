@@ -147,3 +147,19 @@ telemetrygen traces --otlp-insecure --traces 1
 View in Jaeger UI at `http://localhost:16686/`:
 
 ![Jaeger UI](./.imgs/jaeger-trace.png)
+
+Initiate the go workspace:
+
+```bash
+cd ${GIT_ROOT}/opentelemetry-collector-raki
+
+go work init
+go work use otelcol-raki
+go work use tailtracer
+```
+
+Run the Collector with the receiver wired up, either use VSCOde debugging, or via `go`:
+
+```bash
+go run ./otelcol-raki --config ${GIT_ROOT}/custom-collector-runtime-config.yaml
+```

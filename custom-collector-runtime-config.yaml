@@ -9,6 +9,9 @@ receivers:
         endpoint: localhost:4317
       http:
         endpoint: localhost:4318
+  tailtracer:
+    interval: 5s
+    number_of_traces: 1
 
 processors:
   batch:
@@ -30,7 +33,7 @@ exporters:
 service:
   pipelines:
     traces:
-      receivers: [otlp]
+      receivers: [otlp, tailtracer]
       processors: [memory_limiter, batch]
       exporters: [debug, otlp/jaeger]
     metrics:

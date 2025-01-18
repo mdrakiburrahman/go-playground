@@ -1,7 +1,7 @@
 dist:
   name: otelcol-raki
   description: Raki's OTel Collector distribution for learning stuff
-  output_path: ./opentelemetry-collector-raki
+  output_path: ./opentelemetry-collector-raki/otelcol-raki
 
 exporters:
   - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.117.0

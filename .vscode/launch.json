@@ -21,7 +21,7 @@
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "${workspaceRoot}/opentelemetry-collector-raki",
+            "program": "${workspaceRoot}/opentelemetry-collector-raki/otelcol-raki",
             "args": ["--config", "${workspaceRoot}/custom-collector-runtime-config.yaml"]
         },
         {
