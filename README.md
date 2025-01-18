@@ -124,7 +124,7 @@ Build the collector:
 ./ocb --config custom-collector-builder-config.yaml
 ```
 
-### Building a Receiver
+### Building a Receiver, Connector
 
 Spin up Jaeger UI:
 
