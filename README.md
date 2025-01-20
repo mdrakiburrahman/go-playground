@@ -124,7 +124,7 @@ Build the collector:
 ./ocb --config custom-collector-builder-config.yaml
 ```
 
-### Building a Receiver, Connector
+### Building a Receiver, Connector, Exporter
 
 Spin up Jaeger UI:
 
@@ -157,6 +157,7 @@ go work init
 go work use otelcol-raki
 go work use tailtracer
 go work use exampleconnector
+go work use emptyexporter
 ```
 
 Run the Collector with the receiver wired up, either use VSCOde debugging, or via `go`:

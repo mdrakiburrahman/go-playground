@@ -35,20 +35,21 @@ exporters:
     endpoint: localhost:14317
     tls:
       insecure: true
+  emptyexporter:
 
 service:
   pipelines:
     traces:
       receivers: [otlp, tailtracer]
       processors: [memory_limiter, batch]
-      exporters: [debug, otlp/jaeger, exampleconnector]
+      exporters: [debug, otlp/jaeger, exampleconnector, emptyexporter]
     metrics:
       receivers: [otlp, exampleconnector]
       processors: [memory_limiter, batch]
-      exporters: [debug]
+      exporters: [debug, emptyexporter]
     logs:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [debug]
+      exporters: [debug, emptyexporter]
 
   extensions: [zpages]
