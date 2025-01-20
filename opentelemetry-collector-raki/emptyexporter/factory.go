@@ -12,9 +12,6 @@ var (
 	typeStr = component.MustNewType("emptyexporter")
 )
 
-type Config struct {
-}
-
 func NewFactory() exporter.Factory {
 	return exporter.NewFactory(
 		typeStr,
@@ -27,32 +24,32 @@ func NewFactory() exporter.Factory {
 
 func createTracesExporter(
 	ctx context.Context,
-	set exporter.Settings,
+	params exporter.Settings,
 	config component.Config) (exporter.Traces, error) {
 
 	cfg := config.(*Config)
-	s := NewEmptyexporter()
-	return exporterhelper.NewTraces(ctx, set, cfg, s.pushTraces)
+	s, _ := newEmptyexporter(params.Logger, config.(*Config))
+	return exporterhelper.NewTraces(ctx, params, cfg, s.pushTraces)
 }
 
 func createMetricsExporter(
 	ctx context.Context,
-	set exporter.Settings,
+	params exporter.Settings,
 	config component.Config) (exporter.Metrics, error) {
 
 	cfg := config.(*Config)
-	s := NewEmptyexporter()
-	return exporterhelper.NewMetrics(ctx, set, cfg, s.pushMetrics)
+	s, _ := newEmptyexporter(params.Logger, config.(*Config))
+	return exporterhelper.NewMetrics(ctx, params, cfg, s.pushMetrics)
 }
 
 func createLogsExporter(
 	ctx context.Context,
-	set exporter.Settings,
+	params exporter.Settings,
 	config component.Config) (exporter.Logs, error) {
 
 	cfg := config.(*Config)
-	s := NewEmptyexporter()
-	return exporterhelper.NewLogs(ctx, set, cfg, s.pushLogs)
+	s, _ := newEmptyexporter(params.Logger, config.(*Config))
+	return exporterhelper.NewLogs(ctx, params, cfg, s.pushLogs)
 }
 
 func createDefaultConfig() component.Config {

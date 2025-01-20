@@ -36,6 +36,7 @@ exporters:
     tls:
       insecure: true
   emptyexporter:
+    should_log: true
 
 service:
   pipelines:
