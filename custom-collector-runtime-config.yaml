@@ -37,6 +37,7 @@ exporters:
       insecure: true
   emptyexporter:
     should_log: true
+    encoding: otlp_csv
 
 service:
   pipelines:

@@ -158,6 +158,7 @@ go work use otelcol-raki
 go work use tailtracer
 go work use exampleconnector
 go work use emptyexporter
+go work use marshaler
 ```
 
 Run the Collector with the receiver wired up, either use VSCOde debugging, or via `go`:
