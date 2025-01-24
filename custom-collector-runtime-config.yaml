@@ -38,20 +38,24 @@ exporters:
   emptyexporter:
     should_log: true
     encoding: otlp_csv
+  otlp/aspire:
+    endpoint: localhost:18889
+    tls:
+      insecure: true
 
 service:
   pipelines:
     traces:
       receivers: [otlp, tailtracer]
       processors: [memory_limiter, batch]
-      exporters: [debug, otlp/jaeger, exampleconnector, emptyexporter]
+      exporters: [debug, otlp/jaeger, exampleconnector, emptyexporter, otlp/aspire]
     metrics:
       receivers: [otlp, exampleconnector]
       processors: [memory_limiter, batch]
-      exporters: [debug, emptyexporter]
+      exporters: [debug, emptyexporter, otlp/aspire]
     logs:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [debug, emptyexporter]
+      exporters: [debug, emptyexporter, otlp/aspire]
 
   extensions: [zpages]
