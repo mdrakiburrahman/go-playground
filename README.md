@@ -53,7 +53,7 @@
    chmod +x ${GIT_ROOT}/contrib/bootstrap-dev-env.sh && ${GIT_ROOT}/contrib/bootstrap-dev-env.sh && source ~/.bashrc
    ```
 
-Motes:
+Notes:
 
 * If you run into docker problems, check `Docker Desktop: Settings > Resources > WSL Integration > Turn off/on Ubuntu-24.04`
 
@@ -69,6 +69,22 @@ go test ./...
 The debugger settings should also work (first time debug takes a few seconds to boot):
 
 ![Debug Hello Go](./.imgs/debug-hello-go.png)
+
+## `sni-go` - a way to get an SNI cert
+
+```bash
+cd sni-go
+
+az login --use-device-code
+
+export VAULT_URL="https://a...d.vault.azure.net/"
+export CERT_NAME="s...i"
+export CLIENT_ID="e...7"
+export TENANT_ID="7...7"
+export SCOPE="https://database.windows.net/.default"
+
+go run main.go
+```
 
 ## OpenTelemetry
 
