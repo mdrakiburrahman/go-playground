@@ -32,17 +32,16 @@
    code .
    ```
 
-3. Bootstrap your dev env
+3. Reset your docker WSL integration since this is a new VM:
+
+   > `Docker Desktop: Settings > Resources > WSL Integration > Turn off/on Ubuntu-24.04`
+
+4. Bootstrap your dev env
 
    ```bash
    GIT_ROOT=$(git rev-parse --show-toplevel)
    chmod +x ${GIT_ROOT}/contrib/bootstrap-dev-env.sh && ${GIT_ROOT}/contrib/bootstrap-dev-env.sh && source ~/.bashrc
    ```
-
-Notes:
-
-* If you run into docker problems, check `Docker Desktop: Settings > Resources > WSL Integration > Turn off/on Ubuntu-24.04`
-* You may need to run the script twice if the Docker thing fails due to Docker Desktop WSL Integration pointing to the old VM
 
 ## `hello-go` - a simple app
 
