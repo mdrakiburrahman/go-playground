@@ -56,6 +56,7 @@
 Notes:
 
 * If you run into docker problems, check `Docker Desktop: Settings > Resources > WSL Integration > Turn off/on Ubuntu-24.04`
+* You may need to run the script twice if the Docker thing fails due to Docker Desktop WSL Integration pointing to the old VM
 
 ## `hello-go` - a simple app
 
