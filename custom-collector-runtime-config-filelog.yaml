@@ -13,6 +13,13 @@ receivers:
     #
     # >>> https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/pkg/stanza/docs/operators
     #
+    # See here for good examples:
+    #
+    # >>> K8s demo:                https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/examples/kubernetes/otel-collector-config.yml
+    # >>> Some blog:               https://last9.io/blog/opentelemetry-filelog-receiver-kubernetes-log-collection/
+    # >>> A complete daemonset:    https://github.com/middleware-labs/mw-agent/blob/9a6e9989d09c2ecdf3ea506fc83dd92c64b981c1/configyamls-k8s/otel-config-daemonset.yaml#L2
+    # >>> For docker:              https://github.com/ScienceLogic/otel-components/blob/767a9ed1455fedcac98495b7b6cc718a78f785c2/sllogformatprocessor/examples/otelcol_docker.yaml#L2
+    #
     operators:
 
       - type: regex_parser
