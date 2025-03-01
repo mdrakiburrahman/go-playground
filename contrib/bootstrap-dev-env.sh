@@ -18,7 +18,7 @@ echo ""
 
 code --install-extension github.copilot
 code --install-extension eamodio.gitlens
-code --install-extension golang.go
+code --install-extension golang.go0.45.0
 code --install-extension ms-vscode.makefile-tools
 
 echo ""
