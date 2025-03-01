@@ -1,0 +1,38 @@
+receivers:
+  filelog:
+    
+    include: 
+    - /home/boor/go-playground/.temp/*/*/*.log
+    
+    start_at: beginning
+    
+    include_file_path: true
+    include_file_name: true
+
+    # See here for operators:
+    #
+    # >>> https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/pkg/stanza/docs/operators
+    #
+    operators:
+
+      - type: regex_parser
+        id: extract_attributes_from_file_path
+        regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
+        parse_from: attributes["log.file.path"]
+        cache:
+          size: 128
+          
+      - type: add
+        id: add_service_name
+        field: resource["service.name"]
+        value: EXPR(attributes.namespace + "/" + attributes.pod_name + "/" + attributes.container_name + "/" + attributes.restart_count)
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    logs:
+      receivers: [filelog]
+      exporters: [debug]

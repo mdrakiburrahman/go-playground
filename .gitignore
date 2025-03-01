@@ -24,3 +24,6 @@
 opentelemetry-collector/*
 opentelemetry-collector-contrib/*
 ocb
+
+# Temp
+.temp
