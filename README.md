@@ -18,13 +18,7 @@
    wsl --install -d Ubuntu-24.04
    ```
 
-2. Open VS Code in the WSL:
-
-   ```powershell
-   code .
-   ```
-
-3. Clone the repo, and open VSCode in it:
+2. Clone the repo, and open VSCode in it:
 
    ```bash
    cd ~/
@@ -38,15 +32,7 @@
    code .
    ```
 
-4. Fetch origin:
-
-   ```bash
-   git fetch origin
-   ```
-
-   Checkout any branch using VS Code UI.
-
-5. Bootstrap your dev env
+3. Bootstrap your dev env
 
    ```bash
    GIT_ROOT=$(git rev-parse --show-toplevel)

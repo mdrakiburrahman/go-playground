@@ -11,17 +11,6 @@ set -e
 set -m
 
 echo ""
-echo "┌───────────────────────────────┐"
-echo "│ Installing VS Code extensions │"
-echo "└───────────────────────────────┘"
-echo ""
-
-code --install-extension github.copilot
-code --install-extension eamodio.gitlens
-code --install-extension golang.go0.45.0
-code --install-extension ms-vscode.makefile-tools
-
-echo ""
 echo "┌───────────────────────────────────┐"
 echo "│ Checking for package dependencies │"
 echo "└───────────────────────────────────┘"
@@ -74,6 +63,17 @@ if ! command -v az &> /dev/null; then
     echo "az not found - installing..."
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 fi
+
+echo ""
+echo "┌───────────────────────────────┐"
+echo "│ Installing VS Code extensions │"
+echo "└───────────────────────────────┘"
+echo ""
+
+code --install-extension github.copilot
+code --install-extension eamodio.gitlens
+code --install-extension golang.go@0.45.0
+code --install-extension ms-vscode.makefile-tools
 
 echo ""
 echo "┌──────────┐"
