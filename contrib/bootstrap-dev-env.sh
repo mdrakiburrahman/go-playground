@@ -19,6 +19,7 @@ echo ""
 PACKAGES=""
 if ! command -v make &> /dev/null; then PACKAGES="$PACKAGES make"; fi
 if ! command -v tree &> /dev/null; then PACKAGES="$PACKAGES tree"; fi
+if ! command -v jq &> /dev/null; then PACKAGES="$PACKAGES jq"; fi
 if [ ! -z "$PACKAGES" ]; then
     echo "Packages $PACKAGES not found - installing..."
     sudo apt-get update 2>&1 > /dev/null

@@ -79,8 +79,8 @@ cd cert-auth-go
 
 go run main.go \
    --cert-abs-path "${GIT_ROOT}/cert-auth-go/.secrets/myCert.cer" \
-   --tenant-id "72f988bf-86f1-41af-91ab-2d7cd011db47" \
-   --client-id "8b6e7cc1-d791-4844-bac4-cd50d649e63d" \
+   --tenant-id $(jq -r '.tenantId' /home/boor/go-playground/cert-auth-go/.secrets/agentconfig.json) \
+   --client-id $(jq -r '.clientId' /home/boor/go-playground/cert-auth-go/.secrets/agentconfig.json) \
    --scope "https://management.core.windows.net/.default"
 ```
 
