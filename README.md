@@ -77,7 +77,7 @@ go run main.go
 ```bash
 cd cert-auth-go
 
-go run main.go
+go run main.go --cert-abs-path "${GIT_ROOT}/cert-auth-go/.secrets/myCert.cer"
 ```
 
 ## OpenTelemetry
