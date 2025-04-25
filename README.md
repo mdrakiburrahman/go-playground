@@ -72,6 +72,14 @@ export SCOPE="https://database.windows.net/.default"
 go run main.go
 ```
 
+## `cert-auth-go` - use a local cert to auth
+
+```bash
+cd cert-auth-go
+
+go run main.go
+```
+
 ## OpenTelemetry
 
 ### Client/Server demo to Core Collector
