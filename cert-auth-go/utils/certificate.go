@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"crypto"
+	"crypto/rsa"
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
@@ -27,6 +29,38 @@ func decodePkcs12Chain(pfxData []byte, password string) (certChain []*x509.Certi
 	}
 
 	return certChain, nil
+}
+
+func decodePkcs12(pkcs []byte, password string) (*x509.Certificate, *rsa.PrivateKey, error) {
+	privateKey, certificate, err := pkcs12.Decode(pkcs, password)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	rsaPrivateKey, isRsaKey := privateKey.(*rsa.PrivateKey)
+	if !isRsaKey || rsaPrivateKey == nil {
+		return nil, nil, fmt.Errorf("PKCS#12 certificate must contain an RSA private key")
+	}
+
+	return certificate, rsaPrivateKey, nil
+}
+
+// GetCertByFilePath guarantees to return valid (non-nil) certificate and private key on nil error
+func GetCertByFilePath(certificatePath string) (certificate *x509.Certificate, rsaPrivateKey crypto.PrivateKey, err error) {
+	certbytes, err := os.ReadFile(certificatePath)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to read the certificate file (%s): %v", certificatePath, err)
+	}
+	certBase64Data, err := base64.StdEncoding.DecodeString(string(certbytes))
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to decode certificate (1): %v", err)
+	}
+	certificate, rsaPrivateKey, err = decodePkcs12(certBase64Data, "")
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to decode certificate (2): %v", err)
+	}
+
+	return certificate, rsaPrivateKey, nil
 }
 
 // GetCertChainByFilePath reads a certificate file, decodes it from base64, and returns the certificate chain.
