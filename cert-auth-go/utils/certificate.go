@@ -45,7 +45,7 @@ func decodePkcs12(pkcs []byte, password string) (*x509.Certificate, *rsa.Private
 	return certificate, rsaPrivateKey, nil
 }
 
-// GetCertByFilePath guarantees to return valid (non-nil) certificate and private key on nil error
+// GetCertByFilePath returns a certificate and private key from a PKCS#12 file.
 func GetCertByFilePath(certificatePath string) (certificate *x509.Certificate, rsaPrivateKey crypto.PrivateKey, err error) {
 	certbytes, err := os.ReadFile(certificatePath)
 	if err != nil {
