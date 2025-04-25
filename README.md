@@ -72,6 +72,18 @@ export SCOPE="https://database.windows.net/.default"
 go run main.go
 ```
 
+## `cert-auth-go` - use a local cert to auth
+
+```bash
+cd cert-auth-go
+
+go run main.go \
+   --cert-abs-path "${GIT_ROOT}/cert-auth-go/.secrets/myCert.cer" \
+   --tenant-id $(jq -r '.tenantId' /home/boor/go-playground/cert-auth-go/.secrets/agentconfig.json) \
+   --client-id $(jq -r '.clientId' /home/boor/go-playground/cert-auth-go/.secrets/agentconfig.json) \
+   --scope "https://management.core.windows.net/.default"
+```
+
 ## OpenTelemetry
 
 ### Client/Server demo to Core Collector
