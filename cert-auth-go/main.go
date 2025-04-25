@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"cert-auth-go/utils" // Import the utils package
+	"cert-auth-go/utils"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
