@@ -245,9 +245,13 @@ We don't do fancy RegEx parsing for timestamps and stuff. The `ObservedTimestamp
 
 ## Parquet
 
+Following [The Go Developer's Guide to Using Apache Arrow: Reading and Writing Parquet Files](https://www.sobyte.net/post/2023-08/go-apache-arrow-parquet/).
+
 ```bash
 cd hello-parquet-go
+```
 
+```bash
 # Create a simple parquet file from an Arrow Table
 go run to_parquet/flat_table_to_parquet.go
 
@@ -345,4 +349,63 @@ arrays in column(col2):
 arrays in column(col3):
 ["s1" "s2" "s3" "s4" "s5" "s6" "s7" "s8" "s9" "s10"]
 ------
+```
+
+```bash
+# Create a compressed parquet file from an Arrow Table
+go run to_parquet_compressed/flat_table_to_parquet_compressed.go
+
+# Look at it
+parquet_reader flat_table_compressed.parquet
+```
+
+Output:
+
+```text
+File name: flat_table_compressed.parquet
+Version: v2.6
+Created By: parquet-go version 13.0.0
+Num Rows: 10
+Number of RowGroups: 1
+Number of Real Columns: 3
+Number of Columns: 3
+Number of Selected Columns: 3
+Column 0: col1 (INT32/INT_32)
+Column 1: col2 (DOUBLE)
+Column 2: col3 (BYTE_ARRAY/UTF8)
+--- Row Group: 0  ---
+--- Total Bytes: 352  ---
+--- Rows: 10  ---
+Column 0
+ Values: 10, Min: 1, Max: 10, Null Values: 0, Distinct Values: 0
+ Compression: BROTLI, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 111, Compressed Size: 98
+Column 1
+ Values: 10, Min: 1.1, Max: 10, Null Values: 0, Distinct Values: 0
+ Compression: SNAPPY, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 168, Compressed Size: 148
+Column 2
+ Values: 10, Min: [115 49], Max: [115 57], Null Values: 0, Distinct Values: 0
+ Compression: SNAPPY, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 116, Compressed Size: 106
+--- Values ---
+col1              |col2              |col3              |
+1                 |1.100000          |s1                |
+2                 |2.200000          |s2                |
+3                 |3.300000          |s3                |
+4                 |4.400000          |s4                |
+5                 |5.500000          |s5                |
+6                 |6.600000          |s6                |
+7                 |7.700000          |s7                |
+8                 |8.800000          |s8                |
+9                 |9.900000          |s9                |
+10                |10.000000         |s10               |
+```
+
+Look at the compressed file size:
+
+```bash
+ls -lars
+4 -rw-r--r--  1 boor boor  733 Jun 17 12:25 flat_table_compressed.parquet
+4 -rw-r--r--  1 boor boor 1219 Jun 17 11:51 flat_table.parquet
 ```
