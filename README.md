@@ -260,7 +260,7 @@ File name: flat_table.parquet
 Version: v2.6
 Created By: parquet-go version 13.0.0
 Num Rows: 10
-Number of RowGroups: 1
+Number of RowGroups: 2
 Number of Real Columns: 3
 Number of Columns: 3
 Number of Selected Columns: 3
@@ -268,20 +268,20 @@ Column 0: col1 (INT32/INT_32)
 Column 1: col2 (DOUBLE)
 Column 2: col3 (BYTE_ARRAY/UTF8)
 --- Row Group: 0  ---
---- Total Bytes: 396  ---
---- Rows: 10  ---
+--- Total Bytes: 306  ---
+--- Rows: 6  ---
 Column 0
- Values: 10, Min: 1, Max: 10, Null Values: 0, Distinct Values: 0
+ Values: 6, Min: 1, Max: 6, Null Values: 0, Distinct Values: 0
  Compression: UNCOMPRESSED, Encodings: RLE_DICTIONARY PLAIN RLE
- Uncompressed Size: 111, Compressed Size: 111
+ Uncompressed Size: 90, Compressed Size: 90
 Column 1
- Values: 10, Min: 1.1, Max: 10, Null Values: 0, Distinct Values: 0
+ Values: 6, Min: 1.1, Max: 6.6, Null Values: 0, Distinct Values: 0
  Compression: UNCOMPRESSED, Encodings: RLE_DICTIONARY PLAIN RLE
- Uncompressed Size: 169, Compressed Size: 169
+ Uncompressed Size: 130, Compressed Size: 130
 Column 2
- Values: 10, Min: [115 49], Max: [115 57], Null Values: 0, Distinct Values: 0
+ Values: 6, Min: [115 49], Max: [115 54], Null Values: 0, Distinct Values: 0
  Compression: UNCOMPRESSED, Encodings: RLE_DICTIONARY PLAIN RLE
- Uncompressed Size: 116, Compressed Size: 116
+ Uncompressed Size: 86, Compressed Size: 86
 --- Values ---
 col1              |col2              |col3              |
 1                 |1.100000          |s1                |
@@ -290,6 +290,24 @@ col1              |col2              |col3              |
 4                 |4.400000          |s4                |
 5                 |5.500000          |s5                |
 6                 |6.600000          |s6                |
+
+--- Row Group: 1  ---
+--- Total Bytes: 269  ---
+--- Rows: 4  ---
+Column 0
+ Values: 4, Min: 7, Max: 10, Null Values: 0, Distinct Values: 0
+ Compression: UNCOMPRESSED, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 81, Compressed Size: 81
+Column 1
+ Values: 4, Min: 7.7, Max: 10, Null Values: 0, Distinct Values: 0
+ Compression: UNCOMPRESSED, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 113, Compressed Size: 113
+Column 2
+ Values: 4, Min: [115 49 48], Max: [115 57], Null Values: 0, Distinct Values: 0
+ Compression: UNCOMPRESSED, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 75, Compressed Size: 75
+--- Values ---
+col1              |col2              |col3              |
 7                 |7.700000          |s7                |
 8                 |8.800000          |s8                |
 9                 |9.900000          |s9                |

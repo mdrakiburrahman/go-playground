@@ -39,7 +39,7 @@
             "program": "${workspaceRoot}/opentelemetry-collector-contrib/examples/demo/server"
         },
         {
-            "name": "Launch Flat Table to Parquet",
+            "name": "Launch specific standalone file",
             "type": "go",
             "request": "launch",
             "mode": "debug",

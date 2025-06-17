@@ -111,7 +111,7 @@ func main() {
 	}
 	defer f.Close()
 
-	err = pqarrow.WriteTable(tbl, f, 1024, nil, pqarrow.DefaultWriterProps())
+	err = pqarrow.WriteTable(tbl, f, 6, nil, pqarrow.DefaultWriterProps())
 	if err != nil {
 		panic(err)
 	}
