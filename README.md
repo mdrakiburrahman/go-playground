@@ -246,8 +246,10 @@ We don't do fancy RegEx parsing for timestamps and stuff. The `ObservedTimestamp
 ## Parquet
 
 ```bash
+cd hello-parquet-go
+
 # Create a simple parquet file from an Arrow Table
-go run flat_table_to_parquet.go
+go run to_parquet/flat_table_to_parquet.go
 
 # Look at it
 parquet_reader flat_table.parquet
@@ -312,4 +314,35 @@ col1              |col2              |col3              |
 8                 |8.800000          |s8                |
 9                 |9.900000          |s9                |
 10                |10.000000         |s10               |
+```
+
+Read back:
+
+```bash
+# Create a simple parquet file from an Arrow Table
+go run from_parquet/flat_table_from_parquet.go
+```
+
+```text
+schema:
+  fields: 3
+    - col1: type=int32
+      metadata: ["PARQUET:field_id": "-1"]
+    - col2: type=float64
+      metadata: ["PARQUET:field_id": "-1"]
+    - col3: type=utf8
+      metadata: ["PARQUET:field_id": "-1"]
+------
+the count of table columns= 3
+the count of table rows= 10
+------
+arrays in column(col1):
+[1 2 3 4 5 6 7 8 9 10]
+------
+arrays in column(col2):
+[1.1 2.2 3.3 4.4 5.5 6.6 7.7 8.8 9.9 10]
+------
+arrays in column(col3):
+["s1" "s2" "s3" "s4" "s5" "s6" "s7" "s8" "s9" "s10"]
+------
 ```
