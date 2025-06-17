@@ -545,3 +545,92 @@ record:
   col[1][location]: ["beijing2" "shanghai2" "chengdu2"]
   col[2][year]: [1994 1995 1996]
 ```
+
+Write RecordBatch compressed:
+
+```bash
+go run to_parquet_recordbatch_compressed/flat_record_to_parquet_compressed.go
+```
+
+```bash
+# Compression is poor:
+parquet_reader flat_record_compressed.parquet
+```
+
+```text
+File name: flat_record_compressed.parquet
+Version: v2.6
+Created By: parquet-go version 13.0.0
+Num Rows: 9
+Number of RowGroups: 3
+Number of Real Columns: 3
+Number of Columns: 3
+Number of Selected Columns: 3
+Column 0: archer (BYTE_ARRAY/UTF8)
+Column 1: location (BYTE_ARRAY/UTF8)
+Column 2: year (INT32/INT_16)
+--- Row Group: 0  ---
+--- Total Bytes: 315  ---
+--- Rows: 3  ---
+Column 0
+ Values: 3, Min: [97 109 121 48], Max: [116 111 110 121 48], Null Values: 0, Distinct Values: 0
+ Compression: ZSTD, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 79, Compressed Size: 105
+Column 1
+ Values: 3, Min: [98 101 105 106 105 110 103 48], Max: [115 104 97 110 103 104 97 105 48], Null Values: 0, Distinct Values: 0
+ Compression: ZSTD, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 99, Compressed Size: 125
+Column 2
+ Values: 3, Min: 1992, Max: 1994, Null Values: 0, Distinct Values: 0
+ Compression: BROTLI, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 77, Compressed Size: 85
+--- Values ---
+archer            |location          |year              |
+tony0             |beijing0          |1992              |
+amy0              |shanghai0         |1993              |
+jim0              |chengdu0          |1994              |
+
+--- Row Group: 1  ---
+--- Total Bytes: 315  ---
+--- Rows: 3  ---
+Column 0
+ Values: 3, Min: [97 109 121 49], Max: [116 111 110 121 49], Null Values: 0, Distinct Values: 0
+ Compression: ZSTD, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 79, Compressed Size: 105
+Column 1
+ Values: 3, Min: [98 101 105 106 105 110 103 49], Max: [115 104 97 110 103 104 97 105 49], Null Values: 0, Distinct Values: 0
+ Compression: ZSTD, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 99, Compressed Size: 125
+Column 2
+ Values: 3, Min: 1993, Max: 1995, Null Values: 0, Distinct Values: 0
+ Compression: BROTLI, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 77, Compressed Size: 85
+--- Values ---
+archer            |location          |year              |
+tony1             |beijing1          |1993              |
+amy1              |shanghai1         |1994              |
+jim1              |chengdu1          |1995              |
+
+--- Row Group: 2  ---
+--- Total Bytes: 315  ---
+--- Rows: 3  ---
+Column 0
+ Values: 3, Min: [97 109 121 50], Max: [116 111 110 121 50], Null Values: 0, Distinct Values: 0
+ Compression: ZSTD, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 79, Compressed Size: 105
+Column 1
+ Values: 3, Min: [98 101 105 106 105 110 103 50], Max: [115 104 97 110 103 104 97 105 50], Null Values: 0, Distinct Values: 0
+ Compression: ZSTD, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 99, Compressed Size: 125
+Column 2
+ Values: 3, Min: 1994, Max: 1996, Null Values: 0, Distinct Values: 0
+ Compression: BROTLI, Encodings: RLE_DICTIONARY PLAIN RLE
+ Uncompressed Size: 77, Compressed Size: 85
+--- Values ---
+archer            |location          |year              |
+tony2             |beijing2          |1994              |
+amy2              |shanghai2         |1995              |
+jim2              |chengdu2          |1996              |
+```
+
+> I.e. compressiong INCREASES the size here!
