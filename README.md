@@ -323,7 +323,6 @@ col1              |col2              |col3              |
 Read back:
 
 ```bash
-# Create a simple parquet file from an Arrow Table
 go run from_parquet/flat_table_from_parquet.go
 ```
 
@@ -494,4 +493,55 @@ archer            |location          |year              |
 tony2             |beijing2          |1994              |
 amy2              |shanghai2         |1995              |
 jim2              |chengdu2          |1996              |
+```
+
+Read back:
+
+```bash
+go run from_parquet_recordbatch/flat_record_from_parquet.go
+```
+
+```text
+{[{archer 0x1fdde40 false {[PARQUET:field_id] [-1]}} {location 0x1fdde40 false {[PARQUET:field_id] [-1]}} {year 0x1fdde40 false {[PARQUET:field_id] [-1]}}] map[archer:[0] location:[1] year:[2]] {[] []} 0}
+record:
+  schema:
+  fields: 3
+    - archer: type=utf8
+        metadata: ["PARQUET:field_id": "-1"]
+    - location: type=utf8
+          metadata: ["PARQUET:field_id": "-1"]
+    - year: type=int16
+      metadata: ["PARQUET:field_id": "-1"]
+  rows: 3
+  col[0][archer]: ["tony0" "amy0" "jim0"]
+  col[1][location]: ["beijing0" "shanghai0" "chengdu0"]
+  col[2][year]: [1992 1993 1994]
+
+record:
+  schema:
+  fields: 3
+    - archer: type=utf8
+        metadata: ["PARQUET:field_id": "-1"]
+    - location: type=utf8
+          metadata: ["PARQUET:field_id": "-1"]
+    - year: type=int16
+      metadata: ["PARQUET:field_id": "-1"]
+  rows: 3
+  col[0][archer]: ["tony1" "amy1" "jim1"]
+  col[1][location]: ["beijing1" "shanghai1" "chengdu1"]
+  col[2][year]: [1993 1994 1995]
+
+record:
+  schema:
+  fields: 3
+    - archer: type=utf8
+        metadata: ["PARQUET:field_id": "-1"]
+    - location: type=utf8
+          metadata: ["PARQUET:field_id": "-1"]
+    - year: type=int16
+      metadata: ["PARQUET:field_id": "-1"]
+  rows: 3
+  col[0][archer]: ["tony2" "amy2" "jim2"]
+  col[1][location]: ["beijing2" "shanghai2" "chengdu2"]
+  col[2][year]: [1994 1995 1996]
 ```
