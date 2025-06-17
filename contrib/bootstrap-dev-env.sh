@@ -47,6 +47,7 @@ fi
 
 /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
 /usr/local/go/bin/go install github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen@latest
+/usr/local/go/bin/go install github.com/apache/arrow/go/v13/parquet/cmd/parquet_reader@latest
 
 echo ""
 echo "┌────────────────────────┐"

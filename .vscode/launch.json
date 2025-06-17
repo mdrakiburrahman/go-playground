@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Go Application",
+            "name": "Launch Hello Go",
             "type": "go",
             "request": "launch",
             "mode": "debug",
@@ -37,6 +37,13 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceRoot}/opentelemetry-collector-contrib/examples/demo/server"
+        },
+        {
+            "name": "Launch Flat Table to Parquet",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceRoot}/hello-parquet-go/flat_table_to_parquet.go"
         }
     ]
 }
