@@ -41,12 +41,24 @@ func (bw *BlobWriteCloser) Write(p []byte) (n int, err error) {
 }
 
 func (bw *BlobWriteCloser) Close() error {
-	// Upload the complete buffer to Azure Blob Storage
+	metadata := map[string]*string{
+		"rawSizeBytes":                   stringPtr(fmt.Sprintf("%d", len(bw.buffer))),
+		"kustoTable":                     stringPtr("Events"),
+		"kustoDataFormat":                stringPtr("parquet"),
+		"kustoIngestionMappingReference": stringPtr("EventsMapping"),
+		"kustoDatabase":                  stringPtr("AnotherDB"),
+	}
+
 	_, err := bw.client.UploadBuffer(bw.ctx, bw.containerName, bw.blobName, bw.buffer, &azblob.UploadBufferOptions{
 		BlockSize:   4 * 1024 * 1024, // 4MB blocks
 		Concurrency: 16,
+		Metadata:    metadata,
 	})
 	return err
+}
+
+func stringPtr(s string) *string {
+	return &s
 }
 
 func main() {
