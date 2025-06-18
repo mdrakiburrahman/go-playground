@@ -633,4 +633,16 @@ amy2              |shanghai2         |1995              |
 jim2              |chengdu2          |1996              |
 ```
 
-> I.e. compressiong INCREASES the size here!
+> I.e. compression INCREASES the size here!
+
+Write to ADLS:
+
+```bash
+az login --use-device-code
+
+# Run with memory buffer
+go run to_parquet_adls/azure_blob_parquet.go "mdrrahmansandbox" "onelake"
+
+# Run streaming
+go run to_parquet_adls_streaming/azure_blob_parquet_streaming.go "mdrrahmansandbox" "onelake"
+```
