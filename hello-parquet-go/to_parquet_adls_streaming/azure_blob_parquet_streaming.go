@@ -41,11 +41,11 @@ func (bw *BlobWriteCloser) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (bw *BlobWriteCloser) Close() error {
+func (bw *BlobWriteCloser) Close(kustoDatabase string, kustoTable string) error {
 	metadata := map[string]*string{
 		"rawSizeBytes":    stringPtr(fmt.Sprintf("%d", len(bw.buffer))),
-		"kustoTable":      stringPtr("table-2"),
-		"kustoDatabase":   stringPtr("database-2"),
+		"kustoDatabase":   stringPtr(kustoDatabase),
+		"kustoTable":      stringPtr(kustoTable),
 		"kustoDataFormat": stringPtr("parquet"),
 	}
 
@@ -62,14 +62,22 @@ func stringPtr(s string) *string {
 }
 
 func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Usage: azure_blob_parquet_streaming <accountName> <containerName>")
+	if len(os.Args) < 6 {
+		fmt.Println("Usage: azure_blob_parquet_streaming <accountName> <containerName> <folderName> <kustoDatabase> <kustoTable>")
 		return
 	}
 	accountName := os.Args[1]
 	containerName := os.Args[2]
+	folderName := os.Args[3]
+	kustoDatabase := os.Args[4]
+	kustoTable := os.Args[5]
+
+	yearMonthDate := time.Now().Format("20060102")
+
 	blobName := fmt.Sprintf(
-		"warehouse/demo-tenant-1/YearMonthDate=20250610/flat_record_compressed_streaming_%d.parquet",
+		"warehouse/%s/YearMonthDate=%s/flat_record_compressed_streaming_%d.parquet",
+		folderName,
+		yearMonthDate,
 		time.Now().Unix(),
 	)
 
@@ -88,7 +96,7 @@ func main() {
 
 	// Create blob writer
 	blobWriter := NewBlobWriteCloser(client, containerName, blobName)
-	defer blobWriter.Close()
+	defer blobWriter.Close(kustoDatabase, kustoTable)
 
 	// Create Arrow records
 	var records []arrow.Record

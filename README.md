@@ -642,9 +642,6 @@ az login --use-device-code
 
 # Run with memory buffer
 go run to_parquet_adls/azure_blob_parquet.go "mdrrahmansandbox" "onelake"
-
-# Run streaming
-go run to_parquet_adls_streaming/azure_blob_parquet_streaming.go "mdrrahmansandbox" "onelake"
 ```
 
 ### Kusto
@@ -696,7 +693,10 @@ Then [this](https://learn.microsoft.com/en-us/azure/data-explorer/create-event-g
 Ingest, and query:
 
 ```kql
-['table-1'] | extend kustoIngestionTimestamp = ingestion_time() | limit 1000
+['table-2']
+| extend kustoIngestionTimestamp = ingestion_time()
+| extend ingestMinutesAgo = datetime_diff('minute', now(), kustoIngestionTimestamp)
+| order by kustoIngestionTimestamp desc
 ```
 
 ### Delta
@@ -707,4 +707,7 @@ go run from_arrow_to_delta/delta_schema_converter.go
 
 # APPEND generation
 go run to_delta_append/delta_append_metadata.go
+
+# Run streaming Parquet with Delta
+go run to_parquet_adls_streaming/azure_blob_parquet_streaming.go "mdrrahmansandbox" "onelake" "demo-tenant-1" "database-2" "table-2"
 ```
