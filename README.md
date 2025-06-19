@@ -696,5 +696,5 @@ Then [this](https://learn.microsoft.com/en-us/azure/data-explorer/create-event-g
 Ingest, and query:
 
 ```kql
-['table-1'] | limit 10
+['table-1'] | extend kustoIngestionTimestamp = ingestion_time() | limit 1000
 ```
