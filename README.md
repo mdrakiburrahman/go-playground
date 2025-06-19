@@ -709,5 +709,5 @@ go run from_arrow_to_delta/delta_schema_converter.go
 go run to_delta_append/delta_append_metadata.go
 
 # Run streaming Parquet with Delta
-go run to_parquet_adls_streaming/azure_blob_parquet_streaming.go "mdrrahmansandbox" "onelake" "demo-tenant-1" "database-2" "table-2"
+go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "demo-tenant-1" "database-2" "table-2"
 ```
