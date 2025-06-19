@@ -698,3 +698,11 @@ Ingest, and query:
 ```kql
 ['table-1'] | extend kustoIngestionTimestamp = ingestion_time() | limit 1000
 ```
+
+### Delta
+
+Check arrow schema conversion:
+
+```bash
+go run from_arrow_to_delta/delta_schema_converter.go
+```
