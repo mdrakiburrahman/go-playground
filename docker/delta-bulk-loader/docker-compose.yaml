@@ -1,0 +1,78 @@
+services:
+
+  delta-bulk-loader:
+    container_name: "delta-bulk-loader"
+    image: "dataplane-mirror-maker-service"
+    entrypoint: ["/usr/bin/dotnet", "/app/Dataplane.StreamProcessing.MirrorMaker.dll"]
+    environment:
+      IDENTITY_ENDPOINT: "https://arc-relay-test.servicebus.windows.net/mdrrahman-relay/token"
+      IMDS_ENDPOINT: "dummy_required_value"
+      TOKEN_CREDENTIAL_MODE_OVERRIDE: "ManagedIdentityCredential"
+    restart: unless-stopped
+    configs:
+      - source: delta-bulk-loader-config
+        target: /app/appsettings.json
+
+configs:
+
+  delta-bulk-loader-config:
+    content: |
+      {
+        "Logging": {
+          "LogLevel": {
+            "Default": "Information",
+            "Microsoft.Hosting.Lifetime": "Information"
+          }
+        },
+        "ParquetDotnetWriterConfiguration": {
+          "CompressionMethod": "Snappy",
+          "CompressionLevel": "SmallestSize",
+          "ParquetCleanUpOnCancel": true
+        },
+        "DeltaWriterConfiguration": {
+          "IsDevelopmentEnvironment": true
+        },
+        "EventHubReplicationConfiguration": {
+          "ReplicationConfiguration": [
+            {
+              "SourceEventHubConfiguration": {
+                "EventHubAuthType": "None",
+                "Namespace": "mdrrahmansandbox.servicebus.windows.net",
+                "Name": "delta-bulk-loader",
+                "EventHubTenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+                "ConsumerGroupName": "local-testing",
+                "IngestionConfiguration": {
+                  "NumOrchestrators": 1,
+                  "MaxBatchSizePerCpu": 50,
+                  "PrefetchCount": 3000,
+                  "EventHubDefaultOffset": "Latest"
+                }
+              },
+              "SinkDeltaLakeConfiguration": [
+                {
+                  "StorageAccountAuthTypeOverride": "None",
+                  "SinkName": "Delta Bulk Load Sink",
+                  "SinkNamespace": "Several Delta Lake tables",
+                  "SinkConfiguration": {
+                    "BufferFlushTimeout": "00:03:00",
+                    "BufferFlushEvaluationInterval": "00:00:01",
+                    "MaxBufferSize": 5000,
+                    "MaxBufferLatency": "00:00:05"
+                  }
+                }
+              ],
+              "BlobCheckpointConfiguration": {
+                "StorageAccountName": "mdrrahmansandbox",
+                "StorageContainerName": "checkpoint"
+              },
+              "BatchedSinkTransactionConfiguration": {
+                "CheckpointUpdateTimeout": "00:03:00",
+                "CheckpointUpdateEvaluationInterval": "00:00:01",
+                "CheckpointUpdateEvaluationMaxDegreeOfParallelism": 1,
+                "CheckpointUpdateMaxOffsetsBatchedPerPartition": 32,
+                "DeadLetterQueueSupported": false
+              }
+            }
+          ]
+        }
+      }

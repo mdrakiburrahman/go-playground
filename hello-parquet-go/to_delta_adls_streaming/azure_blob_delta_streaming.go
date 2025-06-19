@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"parquet-project/delta"
@@ -159,7 +158,7 @@ func main() {
 
 	// Generate the transaction notification
 	transactionNotification, err := delta.GenerateAppendOnlyTransactionNotification(
-		"WorkloadIdentityCredential",
+		"ManagedIdentityCredential",
 		accountName,
 		containerName,
 		rootFolderPath,
@@ -183,13 +182,6 @@ func main() {
 		panic(fmt.Sprintf("failed to generate transaction notification: %v", err))
 	}
 
-	var transactionPrettyJSON map[string]interface{}
-	json.Unmarshal([]byte(transactionNotification), &transactionPrettyJSON)
-	transactionPrettyBytes, _ := json.MarshalIndent(transactionPrettyJSON, "", "  ")
-	fmt.Println("\nTransaction Notification:")
-	fmt.Println(string(transactionPrettyBytes))
-
-	// Send transaction notification to Event Hub
 	fmt.Println("\nSending transaction notification to Event Hub...")
 	err = sendToEventHub(cred, transactionNotification, eventHubNamespace)
 	if err != nil {
