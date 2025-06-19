@@ -1,6 +1,7 @@
 package delta
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -175,4 +176,131 @@ func GenerateDeltaAppendMetadataFromArrowSchema(
 	}
 
 	return GenerateDeltaAppendMetadata(config)
+}
+
+// NotifyTransaction sends a transaction notification to the Delta Lake transaction log
+func NotifyTransaction(
+	deltaLogPath string,
+	protocolVersion DeltaProtocolInfo,
+	metadata DeltaMetaData,
+	addFiles []DeltaAddInfo,
+) error {
+	// Create transaction log entry
+	var actions []interface{}
+
+	// Add metadata action
+	actions = append(actions, metadata)
+
+	// Add protocol action
+	actions = append(actions, DeltaProtocol{Protocol: protocolVersion})
+
+	// Add add actions
+	for _, addFile := range addFiles {
+		actions = append(actions, DeltaAdd{Add: addFile})
+	}
+
+	// Marshal each action to JSON
+	var jsonActions []string
+	for _, action := range actions {
+		actionJSON, err := json.Marshal(action)
+		if err != nil {
+			return fmt.Errorf("failed to marshal action: %w", err)
+		}
+		jsonActions = append(jsonActions, string(actionJSON))
+	}
+
+	// Combine all actions with newlines (Delta Lake transaction log format)
+	logEntry := strings.Join(jsonActions, "\n")
+
+	// Encode the log entry in base64
+	encodedLogEntry := base64.StdEncoding.EncodeToString([]byte(logEntry))
+
+	// Here you would write the encodedLogEntry to the Delta Lake transaction log file
+	// For example purposes, we just print it
+	fmt.Println("Transaction Log Entry (base64):", encodedLogEntry)
+
+	return nil
+}
+
+// TransactionDestination represents the destination configuration for the transaction
+type TransactionDestination struct {
+	StorageAccountAuthType    string `json:"storageAccountAuthType"`
+	StorageAccountName        string `json:"storageAccountName"`
+	StorageContainerName      string `json:"storageContainerName"`
+	TableRelativePath         string `json:"tableRelativePath"`
+	StorageAccountDfsEndpoint string `json:"storageAccountDfsEndpoint"`
+	StorageAccountTenantId    string `json:"storageAccountTenantId"`
+	EngineInfo                string `json:"engineInfo"`
+}
+
+// AppendOnlyTransactionNotification represents the full transaction notification structure
+type AppendOnlyTransactionNotification struct {
+	TransactionDestination                 TransactionDestination `json:"transactionDestination"`
+	SerializedTransactionCommandListBase64 string                 `json:"serializedTransactionCommandListBase64"`
+}
+
+// GenerateAppendOnlyTransactionNotification generates a transaction notification with base64 encoded metadata
+func GenerateAppendOnlyTransactionNotification(
+	storageAccountAuthType string,
+	storageAccountName string,
+	storageContainerName string,
+	tableRelativePath string,
+	storageAccountDfsEndpoint string,
+	storageAccountTenantId string,
+	engineInfo string,
+	schema *arrow.Schema,
+	id string,
+	partitionColumns []string,
+	createdTime int64,
+	minReaderVersion int,
+	minWriterVersion int,
+	path string,
+	partitionValues map[string]string,
+	size int64,
+	modificationTime int64,
+) (string, error) {
+	// Generate the Delta append metadata
+	deltaMetadata, err := GenerateDeltaAppendMetadataFromArrowSchema(
+		schema,
+		id,
+		partitionColumns,
+		createdTime,
+		minReaderVersion,
+		minWriterVersion,
+		path,
+		partitionValues,
+		size,
+		modificationTime,
+	)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate delta metadata: %w", err)
+	}
+
+	// Base64 encode the serialized transaction command list
+	serializedBase64 := base64.StdEncoding.EncodeToString([]byte(deltaMetadata))
+
+	// Create the transaction destination
+	destination := TransactionDestination{
+		StorageAccountAuthType:    storageAccountAuthType,
+		StorageAccountName:        storageAccountName,
+		StorageContainerName:      storageContainerName,
+		TableRelativePath:         tableRelativePath,
+		StorageAccountDfsEndpoint: storageAccountDfsEndpoint,
+		StorageAccountTenantId:    storageAccountTenantId,
+		EngineInfo:                engineInfo,
+	}
+
+	// Create the full notification
+	notification := AppendOnlyTransactionNotification{
+		TransactionDestination:                 destination,
+		SerializedTransactionCommandListBase64: serializedBase64,
+	}
+
+	// Marshal to JSON
+	jsonBytes, err := json.Marshal(notification)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal transaction notification to JSON: %w", err)
+	}
+
+	return string(jsonBytes), nil
 }
