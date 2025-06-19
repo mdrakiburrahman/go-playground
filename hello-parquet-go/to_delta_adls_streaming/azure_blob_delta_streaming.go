@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/Azure/azure-sdk-for-go/sdk/messaging/azeventhubs/v2"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/apache/arrow/go/v13/arrow"
 	"github.com/apache/arrow/go/v13/arrow/array"
@@ -66,8 +67,8 @@ func stringPtr(s string) *string {
 }
 
 func main() {
-	if len(os.Args) < 6 {
-		fmt.Println("Usage: azure_blob_parquet_streaming <accountName> <containerName> <folderName> <kustoDatabase> <kustoTable>")
+	if len(os.Args) < 7 {
+		fmt.Println("Usage: azure_blob_parquet_streaming <accountName> <containerName> <folderName> <kustoDatabase> <kustoTable> <eventHubNamespace>")
 		return
 	}
 	accountName := os.Args[1]
@@ -75,6 +76,7 @@ func main() {
 	folderName := os.Args[3]
 	kustoDatabase := os.Args[4]
 	kustoTable := os.Args[5]
+	eventHubNamespace := os.Args[6]
 
 	yearMonthDate := time.Now().Format("20060102")
 
@@ -186,4 +188,59 @@ func main() {
 	transactionPrettyBytes, _ := json.MarshalIndent(transactionPrettyJSON, "", "  ")
 	fmt.Println("\nTransaction Notification:")
 	fmt.Println(string(transactionPrettyBytes))
+
+	// Send transaction notification to Event Hub
+	fmt.Println("\nSending transaction notification to Event Hub...")
+	err = sendToEventHub(cred, transactionNotification, eventHubNamespace)
+	if err != nil {
+		panic(fmt.Sprintf("failed to send to Event Hub: %v", err))
+	}
+	fmt.Println("Successfully sent transaction notification to Event Hub")
+}
+
+// sendToEventHub sends the transaction notification to the specified Event Hub
+func sendToEventHub(cred *azidentity.AzureCLICredential, message string, namespace string) error {
+
+	eventHubNamespace := fmt.Sprintf(
+		"%s.servicebus.windows.net",
+		namespace,
+	)
+	eventHubName := "delta-bulk-loader"
+
+	// Create Event Hub producer client
+	producerClient, err := azeventhubs.NewProducerClient(eventHubNamespace, eventHubName, cred, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create Event Hub producer client: %w", err)
+	}
+	defer producerClient.Close(context.Background())
+
+	// Create event data
+	eventData := &azeventhubs.EventData{
+		Body: []byte(message),
+		Properties: map[string]any{
+			"ContentType": "application/json",
+			"MessageType": "DeltaLakeTransactionNotification",
+			"Timestamp":   time.Now().UTC().Format(time.RFC3339),
+		},
+	}
+
+	// Create event batch
+	batch, err := producerClient.NewEventDataBatch(context.Background(), nil)
+	if err != nil {
+		return fmt.Errorf("failed to create event batch: %w", err)
+	}
+
+	// Add event to batch
+	err = batch.AddEventData(eventData, nil)
+	if err != nil {
+		return fmt.Errorf("failed to add event to batch: %w", err)
+	}
+
+	// Send the batch
+	err = producerClient.SendEventDataBatch(context.Background(), batch, nil)
+	if err != nil {
+		return fmt.Errorf("failed to send event batch: %w", err)
+	}
+
+	return nil
 }
