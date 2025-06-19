@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
@@ -42,11 +43,10 @@ func (bw *BlobWriteCloser) Write(p []byte) (n int, err error) {
 
 func (bw *BlobWriteCloser) Close() error {
 	metadata := map[string]*string{
-		"rawSizeBytes":                   stringPtr(fmt.Sprintf("%d", len(bw.buffer))),
-		"kustoTable":                     stringPtr("Events"),
-		"kustoDataFormat":                stringPtr("parquet"),
-		"kustoIngestionMappingReference": stringPtr("EventsMapping"),
-		"kustoDatabase":                  stringPtr("AnotherDB"),
+		"rawSizeBytes":    stringPtr(fmt.Sprintf("%d", len(bw.buffer))),
+		"kustoTable":      stringPtr("table-2"),
+		"kustoDatabase":   stringPtr("database-2"),
+		"kustoDataFormat": stringPtr("parquet"),
 	}
 
 	_, err := bw.client.UploadBuffer(bw.ctx, bw.containerName, bw.blobName, bw.buffer, &azblob.UploadBufferOptions{
@@ -68,7 +68,10 @@ func main() {
 	}
 	accountName := os.Args[1]
 	containerName := os.Args[2]
-	blobName := "flat_record_compressed_streaming.parquet"
+	blobName := fmt.Sprintf(
+		"warehouse/demo-tenant-1/YearMonthDate=20250610/flat_record_compressed_streaming_%d.parquet",
+		time.Now().Unix(),
+	)
 
 	// Create Azure credentials using Azure CLI
 	cred, err := azidentity.NewAzureCLICredential(nil)

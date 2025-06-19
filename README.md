@@ -646,3 +646,55 @@ go run to_parquet_adls/azure_blob_parquet.go "mdrrahmansandbox" "onelake"
 # Run streaming
 go run to_parquet_adls_streaming/azure_blob_parquet_streaming.go "mdrrahmansandbox" "onelake"
 ```
+
+### Kusto
+
+Following this [tutorial](https://learn.microsoft.com/en-us/azure/data-explorer/ingest-data-event-grid-manual) to create the Event Grid -> Event Hub subscription.
+
+![Kusto start](.imgs/kusto-start.png)
+
+In Kusto, create the table under `database-1` and `database-2`:
+
+```kql
+
+// Also do table-2
+.create-merge table [table-1] (
+   [archer]:   string,
+   [location]: string,
+   [year]:     int
+)
+
+// Also do table-2
+.alter table [table-1] policy partitioning 
+```
+{
+  "PartitionKeys": [
+    {
+      "ColumnName": "location",
+      "Kind": "Hash",
+      "Properties": {
+        "Function": "XxHash64",
+        "MaxPartitionCount": 128,
+        "PartitionAssignmentMode": "Uniform"
+      }
+    }
+  ]
+}
+```
+
+.alter database [database-1] policy ingestionbatching 
+```
+{
+    "MaximumBatchingTimeSpan" : "00:00:10",
+    "MaximumNumberOfItems" : 50,
+    "MaximumRawDataSizeMB" : 100
+}
+```
+
+Then [this](https://learn.microsoft.com/en-us/azure/data-explorer/create-event-grid-connection?tabs=portal-adx%2Cazure-blob-storage) - to attach the Event Grid to Kusto.
+
+Ingest, and query:
+
+```kql
+['table-1'] | limit 10
+```

@@ -24,7 +24,7 @@ func main() {
 	}
 	accountName := os.Args[1]
 	containerName := os.Args[2]
-	blobName := "flat_record_compressed.parquet"
+	blobName := "demo-tenant-1/flat_record_compressed.parquet"
 
 	// Create Azure credentials using Azure CLI
 	cred, err := azidentity.NewAzureCLICredential(nil)
