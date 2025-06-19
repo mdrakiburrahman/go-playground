@@ -2,10 +2,14 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
+	"parquet-project/delta"
 	"strconv"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
@@ -74,9 +78,13 @@ func main() {
 
 	yearMonthDate := time.Now().Format("20060102")
 
-	blobName := fmt.Sprintf(
-		"warehouse/%s/YearMonthDate=%s/flat_record_compressed_streaming_%d.parquet",
+	rootFolderPath := fmt.Sprintf(
+		"warehouse/%s",
 		folderName,
+	)
+	blobName := fmt.Sprintf(
+		"%s/YearMonthDate=%s/flat_record_compressed_streaming_%d.parquet",
+		rootFolderPath,
 		yearMonthDate,
 		time.Now().Unix(),
 	)
@@ -146,4 +154,36 @@ func main() {
 	}
 
 	fmt.Printf("Successfully streamed parquet file to Azure Blob Storage: %s/%s\n", containerName, blobName)
+
+	// Generate the transaction notification
+	transactionNotification, err := delta.GenerateAppendOnlyTransactionNotification(
+		"WorkloadIdentityCredential",
+		accountName,
+		containerName,
+		rootFolderPath,
+		"dfs.core.windows.net",
+		"72f988bf-86f1-41af-91ab-2d7cd011db47",
+		"DeltaLakeStandaloneDotnet/V1",
+		schema,
+		uuid.New().String(),
+		[]string{"YearMonthDate"},
+		time.Now().UnixMilli(),
+		1,
+		2,
+		blobName,
+		map[string]string{
+			"YearMonthDate": yearMonthDate,
+		},
+		int64(len(blobWriter.buffer)),
+		time.Now().UnixMilli(),
+	)
+	if err != nil {
+		panic(fmt.Sprintf("failed to generate transaction notification: %v", err))
+	}
+
+	var transactionPrettyJSON map[string]interface{}
+	json.Unmarshal([]byte(transactionNotification), &transactionPrettyJSON)
+	transactionPrettyBytes, _ := json.MarshalIndent(transactionPrettyJSON, "", "  ")
+	fmt.Println("\nTransaction Notification:")
+	fmt.Println(string(transactionPrettyBytes))
 }
