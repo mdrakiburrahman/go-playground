@@ -66,6 +66,12 @@ if ! command -v az &> /dev/null; then
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 fi
 
+if ! command -v duckdb &> /dev/null; then
+    echo "duckdb not found - installing..."
+    curl https://install.duckdb.org | sh
+    export PATH='/home/boor/.duckdb/cli/latest':$PATH
+fi
+
 echo ""
 echo "┌───────────────────────────────┐"
 echo "│ Installing VS Code extensions │"

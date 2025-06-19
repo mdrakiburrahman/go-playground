@@ -718,3 +718,16 @@ Run Delta Bulk Loader:
 cd ${GIT_ROOT}/docker/delta-bulk-loader
 docker compose up -d
 ```
+
+Query via DuckDB `duckdb`:
+
+```sql
+SET azure_transport_option_type = 'curl';
+CREATE SECRET (
+    TYPE AZURE,
+    PROVIDER CREDENTIAL_CHAIN,
+    CHAIN 'cli',
+    ACCOUNT_NAME 'mdrrahmansandbox'
+);
+SELECT * FROM delta_scan('abfss://onelake@mdrrahmansandbox.dfs.core.windows.net/warehouse/demo-tenant-1');
+```
