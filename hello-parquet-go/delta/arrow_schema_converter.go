@@ -1,4 +1,4 @@
-package parquet_project
+package delta
 
 import (
 	"encoding/json"

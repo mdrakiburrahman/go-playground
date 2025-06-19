@@ -701,8 +701,10 @@ Ingest, and query:
 
 ### Delta
 
-Check arrow schema conversion:
-
 ```bash
+# Check arrow schema conversion
 go run from_arrow_to_delta/delta_schema_converter.go
+
+# APPEND generation
+go run to_delta_append/delta_append_metadata.go
 ```
