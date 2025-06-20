@@ -83,11 +83,15 @@ func main() {
 		"warehouse/%s",
 		folderName,
 	)
-	blobName := fmt.Sprintf(
-		"%s/YearMonthDate=%s/flat_record_compressed_streaming_%d.parquet",
-		rootFolderPath,
+	tableRelativeBlobPath := fmt.Sprintf(
+		"YearMonthDate=%s/flat_record_compressed_streaming_%d.parquet",
 		yearMonthDate,
 		time.Now().Unix(),
+	)
+	blobName := fmt.Sprintf(
+		"%s/%s",
+		rootFolderPath,
+		tableRelativeBlobPath,
 	)
 
 	// Create Azure credentials using Azure CLI
@@ -165,13 +169,13 @@ func main() {
 		"dfs.core.windows.net",
 		"72f988bf-86f1-41af-91ab-2d7cd011db47",
 		"DeltaLakeStandaloneDotnet/V1",
-		schema,
+		arrow.NewSchema(append(schema.Fields(), arrow.Field{Name: "YearMonthDate", Type: arrow.BinaryTypes.String}), nil),
 		uuid.New().String(),
 		[]string{"YearMonthDate"},
 		time.Now().UnixMilli(),
 		1,
 		2,
-		blobName,
+		tableRelativeBlobPath,
 		map[string]string{
 			"YearMonthDate": yearMonthDate,
 		},
