@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"parquet-project/delta"
-	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -67,12 +67,12 @@ func stringPtr(s string) *string {
 
 func main() {
 	if len(os.Args) < 7 {
-		fmt.Println("Usage: azure_blob_parquet_streaming <accountName> <containerName> <folderName> <kustoDatabase> <kustoTable> <eventHubNamespace>")
+		fmt.Println("Usage: azure_blob_parquet_streaming <accountName> <containerName> <tenantName> <kustoDatabase> <kustoTable> <eventHubNamespace>")
 		return
 	}
 	accountName := os.Args[1]
 	containerName := os.Args[2]
-	folderName := os.Args[3]
+	tenantName := os.Args[3]
 	kustoDatabase := os.Args[4]
 	kustoTable := os.Args[5]
 	eventHubNamespace := os.Args[6]
@@ -81,12 +81,15 @@ func main() {
 
 	rootFolderPath := fmt.Sprintf(
 		"warehouse/%s",
-		folderName,
+		tenantName,
 	)
+	compression := compress.Codecs.Gzip
+
 	tableRelativeBlobPath := fmt.Sprintf(
-		"YearMonthDate=%s/flat_record_compressed_streaming_%d.parquet",
+		"year_month_date=%s/part-00000-%s.c000.%s.parquet",
 		yearMonthDate,
-		time.Now().Unix(),
+		uuid.New().String(),
+		strings.ToLower(compression.String()),
 	)
 	blobName := fmt.Sprintf(
 		"%s/%s",
@@ -115,7 +118,9 @@ func main() {
 	var records []arrow.Record
 	schema := arrow.NewSchema(
 		[]arrow.Field{
-			{Name: "archer", Type: arrow.BinaryTypes.String},
+			{Name: "client_timestamp", Type: arrow.FixedWidthTypes.Timestamp_ms},
+			{Name: "tenant", Type: arrow.BinaryTypes.String},
+			{Name: "person", Type: arrow.BinaryTypes.String},
 			{Name: "location", Type: arrow.BinaryTypes.String},
 			{Name: "year", Type: arrow.PrimitiveTypes.Int16},
 		},
@@ -125,19 +130,18 @@ func main() {
 	rb := array.NewRecordBuilder(memory.DefaultAllocator, schema)
 	defer rb.Release()
 
-	for i := 0; i < 3; i++ {
-		postfix := strconv.Itoa(i)
-		rb.Field(0).(*array.StringBuilder).AppendValues([]string{"tony" + postfix, "amy" + postfix, "jim" + postfix}, nil)
-		rb.Field(1).(*array.StringBuilder).AppendValues([]string{"beijing" + postfix, "shanghai" + postfix, "chengdu" + postfix}, nil)
-		rb.Field(2).(*array.Int16Builder).AppendValues([]int16{1992 + int16(i), 1993 + int16(i), 1994 + int16(i)}, nil)
-		rec := rb.NewRecord()
-		records = append(records, rec)
-	}
+	now := time.Now().UnixMilli()
+	rb.Field(0).(*array.TimestampBuilder).AppendValues([]arrow.Timestamp{arrow.Timestamp(now), arrow.Timestamp(now), arrow.Timestamp(now)}, nil)
+	rb.Field(1).(*array.StringBuilder).AppendValues([]string{tenantName, tenantName, tenantName}, nil)
+	rb.Field(2).(*array.StringBuilder).AppendValues([]string{"tony", "amy", "jim"}, nil)
+	rb.Field(3).(*array.StringBuilder).AppendValues([]string{"beijing", "shanghai", "chengdu"}, nil)
+	rb.Field(4).(*array.Int16Builder).AppendValues([]int16{1992, 1993, 1994}, nil)
+	rec := rb.NewRecord()
+	records = append(records, rec)
 
 	// Create parquet writer that streams directly to Azure Blob
 	props := parquet.NewWriterProperties(
-		parquet.WithCompression(compress.Codecs.Zstd),
-		parquet.WithCompressionFor("year", compress.Codecs.Brotli),
+		parquet.WithCompression(compression),
 	)
 
 	writer, err := pqarrow.NewFileWriter(schema, blobWriter, props, pqarrow.DefaultWriterProps())
@@ -169,15 +173,15 @@ func main() {
 		"dfs.core.windows.net",
 		"72f988bf-86f1-41af-91ab-2d7cd011db47",
 		"DeltaLakeStandaloneDotnet/V1",
-		arrow.NewSchema(append(schema.Fields(), arrow.Field{Name: "YearMonthDate", Type: arrow.BinaryTypes.String}), nil),
+		arrow.NewSchema(append(schema.Fields(), arrow.Field{Name: "year_month_date", Type: arrow.BinaryTypes.String}), nil),
 		uuid.New().String(),
-		[]string{"YearMonthDate"},
+		[]string{"year_month_date"},
 		time.Now().UnixMilli(),
 		1,
 		2,
 		tableRelativeBlobPath,
 		map[string]string{
-			"YearMonthDate": yearMonthDate,
+			"year_month_date": yearMonthDate,
 		},
 		int64(len(blobWriter.buffer)),
 		time.Now().UnixMilli(),

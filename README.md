@@ -650,24 +650,25 @@ Following this [tutorial](https://learn.microsoft.com/en-us/azure/data-explorer/
 
 ![Kusto start](.imgs/kusto-start.png)
 
-In Kusto, create the table under `database-1` and `database-2`:
+In Kusto, create tables under `multi-tenant` and `single-tenant`:
 
 ```kql
-
-// Also do table-2
-.create-merge table [table-1] (
-   [archer]:   string,
-   [location]: string,
-   [year]:     int
+// Also do single-tenant:tenant-1, single-tenant:tenant-2
+.create-merge table [multi-tenant] (
+   [client_timestamp]: datetime,
+   [tenant]:           string,
+   [person]:           string,
+   [location]:         string,
+   [year]:             int
 )
 
-// Also do table-2
-.alter table [table-1] policy partitioning 
+// Also do single-tenant:tenant-1, single-tenant:tenant-2
+.alter table [multi-tenant] policy partitioning 
 ```
 {
   "PartitionKeys": [
     {
-      "ColumnName": "location",
+      "ColumnName": "tenant",
       "Kind": "Hash",
       "Properties": {
         "Function": "XxHash64",
@@ -679,7 +680,8 @@ In Kusto, create the table under `database-1` and `database-2`:
 }
 ```
 
-.alter database [database-1] policy ingestionbatching 
+// Also do single-tenant
+.alter database [multi-tenant] policy ingestionbatching 
 ```
 {
     "MaximumBatchingTimeSpan" : "00:00:10",
@@ -693,10 +695,17 @@ Then [this](https://learn.microsoft.com/en-us/azure/data-explorer/create-event-g
 Ingest, and query:
 
 ```kql
-['table-2']
-| extend kustoIngestionTimestamp = ingestion_time()
-| extend ingestMinutesAgo = datetime_diff('minute', now(), kustoIngestionTimestamp)
-| order by kustoIngestionTimestamp desc
+['multi-tenant']
+| extend kusto_ingestion_time = ingestion_time()
+| extend ingest_lag_seconds = datetime_diff('second', kusto_ingestion_time, client_timestamp)
+| extend ingest_minutes_ago = datetime_diff('minute', now(), kusto_ingestion_time)
+| order by ingest_minutes_ago desc
+```
+
+To clear data in the table:
+
+```kql
+.clear table ['multi-tenant'] data 
 ```
 
 ### Delta
@@ -707,9 +716,6 @@ go run from_arrow_to_delta/delta_schema_converter.go
 
 # APPEND generation
 go run to_delta_append/delta_append_metadata.go
-
-# Run streaming Parquet with Delta
-go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "demo-tenant-1" "database-2" "table-2" "mdrrahmansandbox"
 ```
 
 Run Delta Bulk Loader:
@@ -717,6 +723,18 @@ Run Delta Bulk Loader:
 ```bash
 cd ${GIT_ROOT}/docker/delta-bulk-loader
 docker compose up -d
+```
+
+Run OTEL simulator:
+
+```bash
+# multi-tenant kusto
+go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "tenant-1" "multi-tenant" "multi-tenant" "mdrrahmansandbox"
+go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "tenant-2" "multi-tenant" "multi-tenant" "mdrrahmansandbox"
+
+# single-tenant kusto
+go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "tenant-1" "single-tenant" "tenant-1" "mdrrahmansandbox"
+go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "tenant-2" "single-tenant" "tenant-2" "mdrrahmansandbox"
 ```
 
 Query via DuckDB `duckdb`:
@@ -729,5 +747,5 @@ CREATE SECRET (
     CHAIN 'cli',
     ACCOUNT_NAME 'mdrrahmansandbox'
 );
-SELECT * FROM delta_scan('abfss://onelake@mdrrahmansandbox.dfs.core.windows.net/warehouse/demo-tenant-1');
+SELECT * FROM delta_scan('abfss://onelake@mdrrahmansandbox.dfs.core.windows.net/warehouse/tenant-1');
 ```
