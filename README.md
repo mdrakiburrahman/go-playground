@@ -663,9 +663,8 @@ In Kusto, create tables under `multi-tenant` and `single-tenant`:
 )
 
 // Also do single-tenant:tenant-1, single-tenant:tenant-2
-.alter table [multi-tenant] policy partitioning 
-```
-{
+.alter table [multi-tenant] policy partitioning
+```{
   "PartitionKeys": [
     {
       "ColumnName": "tenant",
@@ -677,17 +676,16 @@ In Kusto, create tables under `multi-tenant` and `single-tenant`:
       }
     }
   ]
-}
-```
+}```
 
 // Also do single-tenant
 .alter database [multi-tenant] policy ingestionbatching 
-```
-{
+```{
     "MaximumBatchingTimeSpan" : "00:00:10",
     "MaximumNumberOfItems" : 50,
     "MaximumRawDataSizeMB" : 100
-}
+}```
+
 ```
 
 Then [this](https://learn.microsoft.com/en-us/azure/data-explorer/create-event-grid-connection?tabs=portal-adx%2Cazure-blob-storage) - to attach the Event Grid to Kusto.
