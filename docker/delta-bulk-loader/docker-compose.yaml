@@ -2,7 +2,7 @@ services:
 
   delta-bulk-loader:
     container_name: "delta-bulk-loader"
-    image: "dataplane-mirror-maker-service"
+    image: "arcdataanalyticsacr.azurecr.io/artifact/ca486455-1a37-40b8-9d7c-9fb79233c8f0/buddy/adshybrid/dataplane-mirror-maker-service:latest"
     entrypoint: ["/usr/bin/dotnet", "/app/Dataplane.StreamProcessing.MirrorMaker.dll"]
     environment:
       IDENTITY_ENDPOINT: "https://arc-relay-test.servicebus.windows.net/mdrrahman-relay/token"

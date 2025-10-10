@@ -720,6 +720,7 @@ Run Delta Bulk Loader:
 
 ```bash
 cd ${GIT_ROOT}/docker/delta-bulk-loader
+az acr login -n arcdataanalyticsacr
 docker compose up -d
 ```
 
@@ -734,6 +735,8 @@ go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" 
 go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "tenant-1" "single-tenant" "tenant-1" "mdrrahmansandbox"
 go run to_delta_adls_streaming/azure_blob_delta_streaming.go "mdrrahmansandbox" "onelake" "tenant-2" "single-tenant" "tenant-2" "mdrrahmansandbox"
 ```
+
+First, run `export PATH='/home/boor/.duckdb/cli/latest':$PATH`.
 
 Query via DuckDB `duckdb`:
 
