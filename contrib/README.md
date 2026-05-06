@@ -34,7 +34,7 @@
    git config --global user.name "$user_name"
    git config --global user.email "$user_email"
    git pull origin
-   git checkout -b "$branch_name"
+   git checkout "$branch_name"
    code .
    ```
 
