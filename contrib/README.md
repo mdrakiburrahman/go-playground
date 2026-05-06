@@ -38,9 +38,16 @@
    code .
    ```
 
+1. Install additional stuff:
+
+   ```bash
+   wget -qO- https://gh.io/copilot-install | bash
+   ```
+
 1. Run the bootstrapper script, that installs all tools idempotently:
 
    ```bash
+   echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/$USER
    GIT_ROOT=$(git rev-parse --show-toplevel)
    chmod +x ${GIT_ROOT}/contrib/bootstrap-dev-env.sh && ${GIT_ROOT}/contrib/bootstrap-dev-env.sh && source ~/.bashrc
    ```
