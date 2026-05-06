@@ -13,8 +13,7 @@
    > ⚠️ Warning: this removes Docker Desktop if you have it installed
 
    ```powershell
-   $GIT_ROOT = git rev-parse --show-toplevel
-   & "$GIT_ROOT\contrib\bootstrap-dev-env.ps1"
+   C:\git\go-playground
    ```
 
 1. Clone the repo, and open VSCode in it:
