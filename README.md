@@ -686,7 +686,8 @@ Run Delta Bulk Loader:
 ```bash
 cd ${GIT_ROOT}/docker/delta-bulk-loader
 az acr login -n arcdataanalyticsacr
-docker compose up -d
+docker compose down -v --remove-orphans && docker compose up -d --force-recreate
+docker logs delta-bulk-loader -f
 ```
 
 Run OTEL simulator:

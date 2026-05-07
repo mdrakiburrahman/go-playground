@@ -5,9 +5,14 @@ services:
     image: "arcdataanalyticsacr.azurecr.io/artifact/ca486455-1a37-40b8-9d7c-9fb79233c8f0/buddy/adshybrid/dataplane-mirror-maker-service:latest"
     entrypoint: ["/usr/bin/dotnet", "/app/Dataplane.StreamProcessing.MirrorMaker.dll"]
     environment:
+      # Fire: azbridge -H mdrrahman-relay:http/localhost:6020 -x "Endpoint=sb:..."
       IDENTITY_ENDPOINT: "https://arc-relay-test.servicebus.windows.net/mdrrahman-relay/token"
       IMDS_ENDPOINT: "dummy_required_value"
       TOKEN_CREDENTIAL_MODE_OVERRIDE: "ManagedIdentityCredential"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:4317"
+      AddLogsOtlpExporter: "false"
+      AddMetricsOtlpExporter: "false"
+      AddTracingOtlpExporter: "false"
     restart: unless-stopped
     configs:
       - source: delta-bulk-loader-config
@@ -20,7 +25,7 @@ configs:
       {
         "Logging": {
           "LogLevel": {
-            "Default": "Information",
+            "Default": "Warning",
             "Microsoft.Hosting.Lifetime": "Information"
           }
         },

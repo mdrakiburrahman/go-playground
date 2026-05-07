@@ -42,6 +42,7 @@
 
    ```bash
    wget -qO- https://gh.io/copilot-install | bash
+   /home/mdrrahman/.local/bin/copilot --yolo
    ```
 
 1. Run the bootstrapper script, that installs all tools idempotently:
